@@ -56,3 +56,31 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
+
+//We are going to make a function to display all the movements.
+const displayMovements = function (movements) {
+  //First we want to empty the entire container and only then we start adding new elements.
+  containerMovements.innerHTML = '';
+
+  movements.forEach(function (mov, i) {
+    //First we need to check if movements is deposit or withdrawal.
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    //We making template string,with template literals to create HTML template elements.
+    const html = `
+  <div class="movements__row">
+    <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__value">${mov}</div>
+  </div>
+  `;
+
+    //Now we want to attach this hmtl element into container movements in html page.
+    //Method insertAdjacentHTML() have 2 string arguments:
+    //1.First argument is position in which we want to attach this html element.
+    //2.Second arguments is that string which contains that html element.
+    containerMovements.insertAdjacentHTML('beforeend', html);
+  });
+};
+
+//We are calling this function
+displayMovements(account1.movements);

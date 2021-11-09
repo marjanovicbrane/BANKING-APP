@@ -87,8 +87,9 @@ nav {
   grid-template-rows: auto repeat(3, 15rem) auto;
   gap: 2rem;
 
-  /* NOTE This creates the fade in/out anumation */
-  opacity: 0;
+  /* NOTE This creates the fade in/out anumation 
+  Logging in and out of this application, changing this opacity */
+  /* opacity: 0; */
   transition: all 1s;
 }
 
@@ -148,10 +149,12 @@ nav {
   color: #666;
 }
 
+/* On this class, we want to applay this style if movements is deposit*/
 .movements__type--deposit {
   background-image: linear-gradient(to top left, #39b385, #9be15d);
 }
 
+/* On this class, we want to applay this style if movements is withdrawal*/
 .movements__type--withdrawal {
   background-image: linear-gradient(to top left, #e52a5a, #ff585f);
 }
