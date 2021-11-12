@@ -84,3 +84,21 @@ const displayMovements = function (movements) {
 
 //We are calling this function
 displayMovements(account1.movements);
+
+//We are going to make a function, to compute usernames for each account in application (we have 4 accounts).
+const createUserNames = function (accs) {
+  //We don't want to create a new array, we just want to modify objects account from the array accounts, because of that we are going to use for each method insted of map.
+  //We just want to add a new property username for each object account.
+  accs.forEach(function (acc) {
+    //We want to create a new property username for the current account.Every user have owner property which contains full name of the user.
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      //For example: when split method is executed we have this array ['Brane','Marjanovic'] and then when map method is executed we have this array ['b','m'] stored in this property acc.username.In this example we transformed this array ['Brane','Marjanovic'] to this ['b','m'].
+      .map(name => name[0])
+      .join('');
+  });
+};
+
+//When this function is executed it will create us a new property username for each account object.
+createUserNames(accounts);
