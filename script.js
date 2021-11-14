@@ -85,6 +85,16 @@ const displayMovements = function (movements) {
 //We are calling this function
 displayMovements(account1.movements);
 
+//We will calculate balance of our account
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  //We want to display that balance in our application.
+  labelBalance.textContent = `${balance} €`;
+};
+
+//We are calling this function
+calcDisplayBalance(account1.movements);
+
 //We are going to make a function, to compute usernames for each account in application (we have 4 accounts).
 const createUserNames = function (accs) {
   //We don't want to create a new array, we just want to modify objects account from the array accounts, because of that we are going to use for each method insted of map.
