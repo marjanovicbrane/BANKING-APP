@@ -70,7 +70,7 @@ const displayMovements = function (movements) {
     const html = `
   <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov}</div>
+    <div class="movements__value">${mov}€</div>
   </div>
   `;
 
@@ -94,6 +94,38 @@ const calcDisplayBalance = function (movements) {
 
 //We are calling this function
 calcDisplayBalance(account1.movements);
+
+//We want to show in this function incomes, costs and interest in our application.
+const calcDisplaySummary = function (movements) {
+  //Incomes
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  labelSumIn.textContent = `${incomes}€`;
+
+  //Costs
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  //Interest is 1.2% for all deposits, and bank pays interest only if it's interest grater then 1 euro or some other currency.
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter((intrest, i, arr) => {
+      console.log(arr);
+      return intrest >= 1;
+    })
+    .reduce((acc, intrest) => acc + intrest, 0);
+
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+//We are calling this function
+calcDisplaySummary(account1.movements);
 
 //We are going to make a function, to compute usernames for each account in application (we have 4 accounts).
 const createUserNames = function (accs) {
