@@ -116,7 +116,7 @@ const calcDisplaySummary = function (movements) {
     .filter(mov => mov > 0)
     .map(deposit => (deposit * 1.2) / 100)
     .filter((intrest, i, arr) => {
-      console.log(arr);
+      //console.log(arr);
       return intrest >= 1;
     })
     .reduce((acc, intrest) => acc + intrest, 0);
@@ -144,3 +144,45 @@ const createUserNames = function (accs) {
 
 //When this function is executed it will create us a new property username for each account object.
 createUserNames(accounts);
+
+//We want to store current account object in this global variable, because we will need this information in some other functions.
+let currentAccount;
+
+//LOGIN FEATURE
+btnLogin.addEventListener('click', function (e) {
+  //This method prevent form from submitting (reload page).
+  e.preventDefault();
+
+  //console.log('LOGIN');
+
+  //Checking for username using find method.
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+
+  //Checking for PIN using OPTIONAL CHAINING
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    //console.log('LOGIN');
+
+    //DISPLAY WELCOME MESSAGE
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+
+    //DISPLAY USER INTERFACE
+    containerApp.style.opacity = 100;
+
+    //CLEAR INPUT FIELDS USERNAME AND PIN
+    inputLoginUsername.value = inputLoginPin.value = '';
+
+    //REMOVE FOCUS FROM PIN INPUT FIELD
+    inputLoginPin.blur();
+
+    //DISPLAY MOVEMENTS, BALANCE AND SUMMERY(IN,OUT,INTEREST)
+    displayMovements(currentAccount.movements);
+    calcDisplayBalance(currentAccount.movements);
+    //We changed this function, now this function have current account object as an argument.
+    calcDisplaySummary(currentAccount);
+  }
+});
