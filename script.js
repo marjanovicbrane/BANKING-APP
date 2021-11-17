@@ -9,27 +9,34 @@ const account1 = {
 };
 
 const account2 = {
-  owner: 'Elon Musk',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
-  interestRate: 1.5,
+  owner: 'Mira Marjanovic',
+  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  interestRate: 1.2,
   pin: 2222,
 };
 
 const account3 = {
-  owner: 'Bill Gates',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
+  owner: 'Elon Musk',
+  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  interestRate: 1.5,
   pin: 3333,
 };
 
 const account4 = {
-  owner: 'Jeff Bezos',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
+  owner: 'Bill Gates',
+  movements: [200, -200, 340, -300, -20, 50, 400, -460],
+  interestRate: 0.7,
   pin: 4444,
 };
 
-const accounts = [account1, account2, account3, account4];
+const account5 = {
+  owner: 'Jeff Bezos',
+  movements: [430, 1000, 700, 50, 90],
+  interestRate: 1,
+  pin: 5555,
+};
+
+const accounts = [account1, account2, account3, account4, account5];
 
 // All elements that we are going to use
 const labelWelcome = document.querySelector('.welcome');
@@ -78,7 +85,7 @@ const displayMovements = function (movements) {
     //Method insertAdjacentHTML() have 2 string arguments:
     //1.First argument is position in which we want to attach this html element.
     //2.Second arguments is that string which contains that html element.
-    containerMovements.insertAdjacentHTML('beforeend', html);
+    containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
 
@@ -86,10 +93,14 @@ const displayMovements = function (movements) {
 //displayMovements(account1.movements);
 
 //We will calculate balance of our account
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+
+//We need to modify this function, because in transfer money callbackfunction we need a current balance from the current account.Because of that we adding account object here as an argument.Because we want to add a new property balance for current object account.
+const calcDisplayBalance = function (account) {
+  //Adding a new property balance for current account object.
+  account.balance = account.movements.reduce((acc, mov) => acc + mov, 0);
+
   //We want to display that balance in our application.
-  labelBalance.textContent = `${balance} €`;
+  labelBalance.textContent = `${account.balance} €`;
 };
 
 //We are calling this function
@@ -145,6 +156,17 @@ const createUserNames = function (accs) {
 //When this function is executed it will create us a new property username for each account object.
 createUserNames(accounts);
 
+//We are going to create here a function which calling all 3 methods for updating UI (MOVEMENTS, BALANCE I SUMMERY-IN, OUT, INTEREST).
+//This function takes for an argument current account object, because we need to update UI for that account.
+const updateUI = function (account) {
+  //DISPLAY MOVEMENTS
+  displayMovements(account.movements);
+  //DISPLAY BALANCE
+  calcDisplayBalance(account);
+  //DISPLAY SUMMARY
+  calcDisplaySummary(account);
+};
+
 //We want to store current account object in this global variable, because we will need this information in some other functions.
 let currentAccount;
 
@@ -179,10 +201,56 @@ btnLogin.addEventListener('click', function (e) {
     //REMOVE FOCUS FROM PIN INPUT FIELD
     inputLoginPin.blur();
 
-    //DISPLAY MOVEMENTS, BALANCE AND SUMMERY(IN,OUT,INTEREST)
-    displayMovements(currentAccount.movements);
-    calcDisplayBalance(currentAccount.movements);
-    //We changed this function, now this function have current account object as an argument.
-    calcDisplaySummary(account);
+    //UPDATE UI (MOVEMENTS, BALANCE I SUMMERY-IN, OUT,   INTEREST)
+    //We are going to create a function which calling all 3 methods for updating UI.
+    updateUI(currentAccount);
   }
+});
+
+//FEATURE FOR TRANSFER MONEY
+btnTransfer.addEventListener('click', function (e) {
+  //This method prevent form from submitting (reload page).
+  e.preventDefault();
+
+  //Get amount
+  const amount = Number(inputTransferAmount.value);
+
+  //Get first account object with current username if exist.
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+
+  //Clean input fields transfer ro and amount.
+  inputTransferTo.value = inputTransferAmount.value = '';
+
+  //console.log(amount, receiverAcc);
+
+  //Here we need to check more things:
+  //1.Amount we transferring need to be positive number.
+  //2.Current user need to have enough money to do transfer.
+  //To check balance we need to add a new property balance for the current account object.
+  //3.We should not be able to transfer money to current account.
+  //4.We need to check if this receiver account actually exists (receiverAcc &&).
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc.username !== currentAccount.username
+  ) {
+    //console.log('Transfer valid!');
+
+    //TRANSFER MONEY
+
+    //We adding a new movement for the current account (negative number).
+    currentAccount.movements.push(-amount);
+
+    //We adding a new movement for the current account (positive number).
+    receiverAcc.movements.push(amount);
+
+    //UPDATE UI (MOVEMENTS, BALANCE I SUMMERY-IN, OUT,   INTEREST)
+    //We are going to create a function which calling all 3 methods for updating UI.
+    updateUI(currentAccount);
+  }
+
+  //inputTransferTo.value = inputTransferAmount.value = '';
 });
