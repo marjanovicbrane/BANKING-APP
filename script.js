@@ -83,7 +83,7 @@ const displayMovements = function (movements) {
 };
 
 //We are calling this function
-displayMovements(account1.movements);
+//displayMovements(account1.movements);
 
 //We will calculate balance of our account
 const calcDisplayBalance = function (movements) {
@@ -93,28 +93,28 @@ const calcDisplayBalance = function (movements) {
 };
 
 //We are calling this function
-calcDisplayBalance(account1.movements);
+//calcDisplayBalance(account1.movements);
 
 //We want to show in this function incomes, costs and interest in our application.
-const calcDisplaySummary = function (movements) {
+const calcDisplaySummary = function (account) {
   //Incomes
-  const incomes = movements
+  const incomes = account.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
 
   labelSumIn.textContent = `${incomes}€`;
 
   //Costs
-  const out = movements
+  const out = account.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
 
   labelSumOut.textContent = `${Math.abs(out)}€`;
 
   //Interest is 1.2% for all deposits, and bank pays interest only if it's interest grater then 1 euro or some other currency.
-  const interest = movements
+  const interest = account.movements
     .filter(mov => mov > 0)
-    .map(deposit => (deposit * 1.2) / 100)
+    .map(deposit => (deposit * account.interestRate) / 100)
     .filter((intrest, i, arr) => {
       //console.log(arr);
       return intrest >= 1;
@@ -125,7 +125,7 @@ const calcDisplaySummary = function (movements) {
 };
 
 //We are calling this function
-calcDisplaySummary(account1.movements);
+//calcDisplaySummary(account1.movements);
 
 //We are going to make a function, to compute usernames for each account in application (we have 4 accounts).
 const createUserNames = function (accs) {
@@ -183,6 +183,6 @@ btnLogin.addEventListener('click', function (e) {
     displayMovements(currentAccount.movements);
     calcDisplayBalance(currentAccount.movements);
     //We changed this function, now this function have current account object as an argument.
-    calcDisplaySummary(currentAccount);
+    calcDisplaySummary(account);
   }
 });

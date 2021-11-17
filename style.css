@@ -89,7 +89,7 @@ nav {
 
   /* NOTE This creates the fade in/out anumation 
   Logging in and out of this application, changing this opacity */
-  /* opacity: 0; */
+  opacity: 0;
   transition: all 1s;
 }
 
