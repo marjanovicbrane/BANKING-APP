@@ -255,6 +255,27 @@ btnTransfer.addEventListener('click', function (e) {
   //inputTransferTo.value = inputTransferAmount.value = '';
 });
 
+//IMPLEMENTATION FOR LOAN FEATURE
+btnLoan.addEventListener('click', function (e) {
+  //This method prevent form from submitting (reload page).
+  e.preventDefault();
+
+  //We take that amount from input field.
+  const amount = Number(inputLoanAmount.value);
+
+  //1.Amount need to be positive number (>0).
+  //2.If we have any deposit that is greater or equal of 10% of request amount, then we can perform loan.
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    //Add that loan amount to the array movements.
+    currentAccount.movements.push(amount);
+
+    //UPDATE UI
+    updateUI(currentAccount);
+  }
+  //Clean input field for loan.
+  inputLoanAmount.value = '';
+});
+
 //CLOSING ACCOUNT ACTUALLY MEANS DELETING AN ACCOUNT OBJECT FROM ACCOUNTS ARRAY.
 btnClose.addEventListener('click', function (e) {
   //This method prevent form from submitting (reload page).
