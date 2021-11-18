@@ -254,3 +254,33 @@ btnTransfer.addEventListener('click', function (e) {
 
   //inputTransferTo.value = inputTransferAmount.value = '';
 });
+
+//CLOSING ACCOUNT ACTUALLY MEANS DELETING AN ACCOUNT OBJECT FROM ACCOUNTS ARRAY.
+btnClose.addEventListener('click', function (e) {
+  //This method prevent form from submitting (reload page).
+  e.preventDefault();
+
+  //console.log('Delete');
+
+  //First we need to check, if the username from the input field is equal to current user, same we need to check for a pin.
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    //Give me an index where is username from the account object equal the current username.
+    const index = accounts.findIndex(
+      account => account.username === currentAccount.username
+    );
+
+    console.log(index);
+
+    //We want to delete that account object from accounts array, using index.
+    accounts.splice(index, 1);
+
+    //When we delete user account, we want to hide UI.
+    containerApp.style.opacity = 0;
+  }
+
+  //We want to clear username and pin input fields.
+  inputCloseUsername.value = inputClosePin.value = '';
+});
