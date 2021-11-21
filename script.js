@@ -65,11 +65,17 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 //We are going to make a function to display all the movements.
-const displayMovements = function (movements) {
+
+//We are going to add a new argument sort in this method for sorting movements array.This parameter is going to be optional and his default value we are going to set on false.
+const displayMovements = function (movements, sort = false) {
   //First we want to empty the entire container and only then we start adding new elements.
   containerMovements.innerHTML = '';
 
-  movements.forEach(function (mov, i) {
+  //We are going to have condition here, if sort is true we are going to sort this movements array, but first we will copy this movement array with slice method, because sort method mutate original array and on that array we will call a sort method.If condition is false we will simply return that movements array.
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  //Here we nedd to use this movs array, not movements.
+  movs.forEach(function (mov, i) {
     //First we need to check if movements is deposit or withdrawal.
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
@@ -304,4 +310,18 @@ btnClose.addEventListener('click', function (e) {
 
   //We want to clear username and pin input fields.
   inputCloseUsername.value = inputClosePin.value = '';
+});
+
+//This is a state variable which monitoring state of sorted array.When we start our application we want to see our original movements array and because of that sorted variable have false value.
+let sorted = false;
+
+//FEATURE FOR SORTING ARRAY MOVEMENTS
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  //We are going to use NOT operator, because we want to have opposite value of sorted variable.
+  displayMovements(currentAccount.movements, !sorted);
+
+  //Now we want to reassign that value.If it was be false to true and opposite.
+  sorted = !sorted;
 });
