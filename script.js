@@ -80,10 +80,11 @@ const displayMovements = function (movements, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     //We making template string,with template literals to create HTML template elements.
+    //We want to round the number in 2 decimal places.
     const html = `
   <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov}€</div>
+    <div class="movements__value">${mov.toFixed(2)}€</div>
   </div>
   `;
 
@@ -106,7 +107,8 @@ const calcDisplayBalance = function (account) {
   account.balance = account.movements.reduce((acc, mov) => acc + mov, 0);
 
   //We want to display that balance in our application.
-  labelBalance.textContent = `${account.balance} €`;
+  //We want to round the number in 2 decimal places.
+  labelBalance.textContent = `${account.balance.toFixed(2)} €`;
 };
 
 //We are calling this function
@@ -119,14 +121,16 @@ const calcDisplaySummary = function (account) {
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
 
-  labelSumIn.textContent = `${incomes}€`;
+  //We want to round the number in 2 decimal places.
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   //Costs
   const out = account.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
 
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  //We want to round the number in 2 decimal places.
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   //Interest is 1.2% for all deposits, and bank pays interest only if it's interest grater then 1 euro or some other currency.
   const interest = account.movements
@@ -138,7 +142,8 @@ const calcDisplaySummary = function (account) {
     })
     .reduce((acc, intrest) => acc + intrest, 0);
 
-  labelSumInterest.textContent = `${interest}€`;
+  //We want to round the number in 2 decimal places.
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 //We are calling this function
@@ -190,7 +195,7 @@ btnLogin.addEventListener('click', function (e) {
   console.log(currentAccount);
 
   //Checking for PIN using OPTIONAL CHAINING
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+  if (currentAccount?.pin === +inputLoginPin.value) {
     //console.log('LOGIN');
 
     //DISPLAY WELCOME MESSAGE
@@ -219,7 +224,7 @@ btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
 
   //Get amount
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
 
   //Get first account object with current username if exist.
   const receiverAcc = accounts.find(
@@ -267,7 +272,8 @@ btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
   //We take that amount from input field.
-  const amount = Number(inputLoanAmount.value);
+  //We want to truncate the number, when we use a loan.For this we are going to use flooer() method.This method also do type coercion, so we don't need the + operand to convert string to Number.
+  const amount = Math.floor(inputLoanAmount.value);
 
   //1.Amount need to be positive number (>0).
   //2.If we have any deposit that is greater or equal of 10% of request amount, then we can perform loan.
@@ -292,7 +298,7 @@ btnClose.addEventListener('click', function (e) {
   //First we need to check, if the username from the input field is equal to current user, same we need to check for a pin.
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     //Give me an index where is username from the account object equal the current username.
     const index = accounts.findIndex(
