@@ -236,6 +236,11 @@ const updateUI = function (account) {
 //We want to store current account object in this global variable, because we will need this information in some other functions.
 let currentAccount;
 
+//FAKE ALWAYS LOGGED IN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+
 //LOGIN FEATURE
 btnLogin.addEventListener('click', function (e) {
   //This method prevent form from submitting (reload page).
