@@ -122,23 +122,40 @@ const inputClosePin = document.querySelector('.form__input--pin');
 //We are going to make a function to display all the movements.
 
 //We are going to add a new argument sort in this method for sorting movements array.This parameter is going to be optional and his default value we are going to set on false.
-const displayMovements = function (movements, sort = false) {
+
+//Now besides the movements, we want to display date of these movements, so we need to pass entire account object in this function.
+const displayMovements = function (acc, sort = false) {
   //First we want to empty the entire container and only then we start adding new elements.
   containerMovements.innerHTML = '';
 
   //We are going to have condition here, if sort is true we are going to sort this movements array, but first we will copy this movement array with slice method, because sort method mutate original array and on that array we will call a sort method.If condition is false we will simply return that movements array.
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   //Here we nedd to use this movs array, not movements.
   movs.forEach(function (mov, i) {
-    //First we need to check if movements is deposit or withdrawal.
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    //This index of the current movement we are going to use to retreve dates from the current account object.
+    const date = new Date(acc.movementsDates[i]);
+
+    //CREATING DATE FOR MOVEMENTS
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+
+    //FORMAT:DD/MM/YY
+    const displayDate = `${day}/${month}/${year}`;
 
     //We making template string,with template literals to create HTML template elements.
     //We want to round the number in 2 decimal places.
+
+    //WE NEED TO ADD ONE MORE ELEMENT, WHICH WILL CONTAIN DATE.
     const html = `
   <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__date">${displayDate}</div>
     <div class="movements__value">${mov.toFixed(2)}€</div>
   </div>
   `;
@@ -226,7 +243,7 @@ createUserNames(accounts);
 //This function takes for an argument current account object, because we need to update UI for that account.
 const updateUI = function (account) {
   //DISPLAY MOVEMENTS
-  displayMovements(account.movements);
+  displayMovements(account);
   //DISPLAY BALANCE
   calcDisplayBalance(account);
   //DISPLAY SUMMARY
@@ -265,6 +282,20 @@ btnLogin.addEventListener('click', function (e) {
 
     //DISPLAY USER INTERFACE
     containerApp.style.opacity = 100;
+
+    //WE WANT TO DISPLAY THE CURRENT DATE AND TIME, WHEN WE LOG IN.
+    const now = new Date();
+
+    const day = `${now.getDate()}`.padStart(2, 0);
+    const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    const year = now.getFullYear();
+
+    //TIME
+    const hour = `${now.getHours()}`.padStart(2, 0);
+    const min = `${now.getMinutes()}`.padStart(2, 0);
+
+    //DATE AND TIME FORMAT:
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
 
     //CLEAR INPUT FIELDS USERNAME AND PIN
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -318,6 +349,12 @@ btnTransfer.addEventListener('click', function (e) {
     //We adding a new movement for the current account (positive number).
     receiverAcc.movements.push(amount);
 
+    //Add transfer date to the account object in array movemenetsDates.
+    currentAccount.movementsDates.push(new Date().toISOString());
+
+    //Do the same for the receiver.
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
     //UPDATE UI (MOVEMENTS, BALANCE I SUMMERY-IN, OUT,   INTEREST)
     //We are going to create a function which calling all 3 methods for updating UI.
     updateUI(currentAccount);
@@ -340,6 +377,9 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     //Add that loan amount to the array movements.
     currentAccount.movements.push(amount);
+
+    //Add loan date to the account object in array movemenetsDates.
+    currentAccount.movementsDates.push(new Date().toISOString());
 
     //UPDATE UI
     updateUI(currentAccount);
