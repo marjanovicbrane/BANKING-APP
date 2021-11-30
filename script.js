@@ -13,9 +13,9 @@ const account1 = {
     '2021-01-28T09:15:04.904Z',
     '2021-04-01T10:17:24.185Z',
     '2021-05-08T14:11:59.604Z',
-    '2021-05-27T17:01:17.194Z',
-    '2021-07-11T23:36:17.929Z',
-    '2021-07-12T10:51:36.790Z',
+    '2021-11-26T17:01:17.194Z',
+    '2021-11-28T23:36:17.929Z',
+    '2021-11-29T10:51:36.790Z',
   ],
 };
 
@@ -119,6 +119,35 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+//WE REFACTOR OUR CODE AND WE HAVE MADE A FUNCTION FOR DATE MOVEMENTS HERE.WE WANT TO DISPLAY TODAY,YESTERDAY,3 DAYS AGO AND FULL DATE FOR EVERY MOVEMENT, DEPENDING HOW MANY DAYS HAVE PASSED FROM THE CURRENT DATE.
+const formatMovementDate = function (date) {
+  //Function that calculates how many days have passed.
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  //We are going to store that result here.
+  const daysPassed = calcDaysPassed(new Date(), date);
+  console.log(daysPassed);
+
+  //We implement here a logic
+  if (daysPassed === 0) return `Today`;
+  if (daysPassed === 1) return `Yesterday`;
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+
+  //Only if everything above (if statement) is false, then display full date
+  //else {
+
+  //CREATING DATE FOR MOVEMENTS FOR > 7 DAYS
+  const day = `${date.getDate()}`.padStart(2, 0);
+  const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  const year = date.getFullYear();
+
+  //FORMAT:DD/MM/YY
+  return `${day}/${month}/${year}`;
+
+  //}
+};
+
 //We are going to make a function to display all the movements.
 
 //We are going to add a new argument sort in this method for sorting movements array.This parameter is going to be optional and his default value we are going to set on false.
@@ -140,13 +169,8 @@ const displayMovements = function (acc, sort = false) {
     //This index of the current movement we are going to use to retreve dates from the current account object.
     const date = new Date(acc.movementsDates[i]);
 
-    //CREATING DATE FOR MOVEMENTS
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-
-    //FORMAT:DD/MM/YY
-    const displayDate = `${day}/${month}/${year}`;
+    //Result of this function formatMovementDate() with current date movement from the current account object we are going to store in this variable displayDate.
+    const displayDate = formatMovementDate(date);
 
     //We making template string,with template literals to create HTML template elements.
     //We want to round the number in 2 decimal places.
