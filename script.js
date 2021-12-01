@@ -17,6 +17,8 @@ const account1 = {
     '2021-11-28T23:36:17.929Z',
     '2021-11-29T10:51:36.790Z',
   ],
+
+  locale: 'en-US',
 };
 
 const account2 = {
@@ -35,6 +37,8 @@ const account2 = {
     '2021-07-11T23:36:17.929Z',
     '2021-07-12T10:51:36.790Z',
   ],
+
+  locale: 'sr-SP',
 };
 
 const account3 = {
@@ -53,6 +57,8 @@ const account3 = {
     '2021-07-11T23:36:17.929Z',
     '2021-07-12T10:51:36.790Z',
   ],
+
+  locale: 'en-US',
 };
 
 const account4 = {
@@ -71,6 +77,8 @@ const account4 = {
     '2021-07-11T23:36:17.929Z',
     '2021-07-12T10:51:36.790Z',
   ],
+
+  locale: 'en-US',
 };
 
 const account5 = {
@@ -89,6 +97,8 @@ const account5 = {
     '2021-07-11T23:36:17.929Z',
     '2021-07-12T10:51:36.790Z',
   ],
+
+  locale: 'ar',
 };
 
 const accounts = [account1, account2, account3, account4, account5];
@@ -120,7 +130,9 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 //WE REFACTOR OUR CODE AND WE HAVE MADE A FUNCTION FOR DATE MOVEMENTS HERE.WE WANT TO DISPLAY TODAY,YESTERDAY,3 DAYS AGO AND FULL DATE FOR EVERY MOVEMENT, DEPENDING HOW MANY DAYS HAVE PASSED FROM THE CURRENT DATE.
-const formatMovementDate = function (date) {
+
+//This function willhave one more argument now and that is locale.
+const formatMovementDate = function (date, locale) {
   //Function that calculates how many days have passed.
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
@@ -138,14 +150,18 @@ const formatMovementDate = function (date) {
   //else {
 
   //CREATING DATE FOR MOVEMENTS FOR > 7 DAYS
-  const day = `${date.getDate()}`.padStart(2, 0);
-  const month = `${date.getMonth() + 1}`.padStart(2, 0);
-  const year = date.getFullYear();
+
+  //const day = `${date.getDate()}`.padStart(2, 0);
+  //const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  //const year = date.getFullYear();
 
   //FORMAT:DD/MM/YY
-  return `${day}/${month}/${year}`;
+  //return `${day}/${month}/${year}`;
 
   //}
+
+  //We are going to use here also INTERNATIONALIZING API for DATES:
+  return new Intl.DateTimeFormat(locale).format(date);
 };
 
 //We are going to make a function to display all the movements.
@@ -169,8 +185,8 @@ const displayMovements = function (acc, sort = false) {
     //This index of the current movement we are going to use to retreve dates from the current account object.
     const date = new Date(acc.movementsDates[i]);
 
-    //Result of this function formatMovementDate() with current date movement from the current account object we are going to store in this variable displayDate.
-    const displayDate = formatMovementDate(date);
+    //Result of this function formatMovementDate() with current date movement and current locale from the current account object we are going to store in this variable displayDate.
+    const displayDate = formatMovementDate(date, acc.locale);
 
     //We making template string,with template literals to create HTML template elements.
     //We want to round the number in 2 decimal places.
@@ -307,19 +323,39 @@ btnLogin.addEventListener('click', function (e) {
     //DISPLAY USER INTERFACE
     containerApp.style.opacity = 100;
 
-    //WE WANT TO DISPLAY THE CURRENT DATE AND TIME, WHEN WE LOG IN.
+    //We are going to use now INTERNATIONALIZING API for DATES:
     const now = new Date();
 
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    const year = now.getFullYear();
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      //weekday: 'long',
+    };
 
-    //TIME
-    const hour = `${now.getHours()}`.padStart(2, 0);
-    const min = `${now.getMinutes()}`.padStart(2, 0);
+    labelDate.textContent = Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
 
-    //DATE AND TIME FORMAT:
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+    //---------------------------------------------------------
+    //WE WANT TO DISPLAY THE CURRENT DATE AND TIME, WHEN WE LOG IN.
+
+    // const now = new Date();
+
+    // const day = `${now.getDate()}`.padStart(2, 0);
+    // const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    // const year = now.getFullYear();
+
+    // //TIME
+    // const hour = `${now.getHours()}`.padStart(2, 0);
+    // const min = `${now.getMinutes()}`.padStart(2, 0);
+
+    // //DATE AND TIME FORMAT:
+    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+    //----------------------------------------------------------
 
     //CLEAR INPUT FIELDS USERNAME AND PIN
     inputLoginUsername.value = inputLoginPin.value = '';
