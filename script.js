@@ -18,6 +18,7 @@ const account1 = {
     '2021-11-29T10:51:36.790Z',
   ],
 
+  currency: 'EUR',
   locale: 'en-US',
 };
 
@@ -38,6 +39,7 @@ const account2 = {
     '2021-07-12T10:51:36.790Z',
   ],
 
+  currency: 'BAM',
   locale: 'sr-SP',
 };
 
@@ -58,6 +60,7 @@ const account3 = {
     '2021-07-12T10:51:36.790Z',
   ],
 
+  currency: 'EUR',
   locale: 'en-US',
 };
 
@@ -78,6 +81,7 @@ const account4 = {
     '2021-07-12T10:51:36.790Z',
   ],
 
+  currency: 'USD',
   locale: 'en-US',
 };
 
@@ -98,6 +102,7 @@ const account5 = {
     '2021-07-12T10:51:36.790Z',
   ],
 
+  currency: 'USD',
   locale: 'ar',
 };
 
@@ -164,6 +169,14 @@ const formatMovementDate = function (date, locale) {
   return new Intl.DateTimeFormat(locale).format(date);
 };
 
+//FUNCTION FOR FORMATTING CURRENCY, USING INTERNATIONALIZING API FOR NUMBER
+const formatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
 //We are going to make a function to display all the movements.
 
 //We are going to add a new argument sort in this method for sorting movements array.This parameter is going to be optional and his default value we are going to set on false.
@@ -188,6 +201,9 @@ const displayMovements = function (acc, sort = false) {
     //Result of this function formatMovementDate() with current date movement and current locale from the current account object we are going to store in this variable displayDate.
     const displayDate = formatMovementDate(date, acc.locale);
 
+    //We are calling function for formatting currency.
+    const formattedMov = formatCur(mov, acc.locale, acc.currency);
+
     //We making template string,with template literals to create HTML template elements.
     //We want to round the number in 2 decimal places.
 
@@ -196,7 +212,7 @@ const displayMovements = function (acc, sort = false) {
   <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">${displayDate}</div>
-    <div class="movements__value">${mov.toFixed(2)}€</div>
+    <div class="movements__value">${formattedMov}</div>
   </div>
   `;
 
@@ -220,7 +236,11 @@ const calcDisplayBalance = function (account) {
 
   //We want to display that balance in our application.
   //We want to round the number in 2 decimal places.
-  labelBalance.textContent = `${account.balance.toFixed(2)} €`;
+  labelBalance.textContent = formatCur(
+    account.balance,
+    account.locale,
+    account.currency
+  );
 };
 
 //We are calling this function
@@ -234,7 +254,7 @@ const calcDisplaySummary = function (account) {
     .reduce((acc, mov) => acc + mov, 0);
 
   //We want to round the number in 2 decimal places.
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = formatCur(incomes, account.locale, account.currency);
 
   //Costs
   const out = account.movements
@@ -242,7 +262,11 @@ const calcDisplaySummary = function (account) {
     .reduce((acc, mov) => acc + mov, 0);
 
   //We want to round the number in 2 decimal places.
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCur(
+    Math.abs(out),
+    account.locale,
+    account.currency
+  );
 
   //Interest is 1.2% for all deposits, and bank pays interest only if it's interest grater then 1 euro or some other currency.
   const interest = account.movements
@@ -255,7 +279,11 @@ const calcDisplaySummary = function (account) {
     .reduce((acc, intrest) => acc + intrest, 0);
 
   //We want to round the number in 2 decimal places.
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCur(
+    interest,
+    account.locale,
+    account.currency
+  );
 };
 
 //We are calling this function
