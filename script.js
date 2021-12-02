@@ -463,14 +463,17 @@ btnLoan.addEventListener('click', function (e) {
   //1.Amount need to be positive number (>0).
   //2.If we have any deposit that is greater or equal of 10% of request amount, then we can perform loan.
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    //Add that loan amount to the array movements.
-    currentAccount.movements.push(amount);
+    //WE ARE GOING TO ADD TIMER HERE, BECAUSE WE WANT TO WAIT 2.5 SECONDS, BEFORE THE BANK APPROVES A LOAN.
+    setTimeout(function () {
+      //Add that loan amount to the array movements.
+      currentAccount.movements.push(amount);
 
-    //Add loan date to the account object in array movemenetsDates.
-    currentAccount.movementsDates.push(new Date().toISOString());
+      //Add loan date to the account object in array movemenetsDates.
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    //UPDATE UI
-    updateUI(currentAccount);
+      //UPDATE UI
+      updateUI(currentAccount);
+    }, 2500);
   }
   //Clean input field for loan.
   inputLoanAmount.value = '';
