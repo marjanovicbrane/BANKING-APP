@@ -3,7 +3,7 @@
 // Data
 const account1 = {
   owner: 'Brane Marjanovic',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  movements: [5000, 4500, -400, 10500, -650, -130, 1770, 1000000],
   interestRate: 1.2, // %
   pin: 1111,
 
@@ -24,7 +24,7 @@ const account1 = {
 
 const account2 = {
   owner: 'Mira Marjanovic',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  movements: [200, 450, -400, 3000, -650, -130, 70, 1000000],
   interestRate: 1.2,
   pin: 2222,
 
