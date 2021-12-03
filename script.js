@@ -319,12 +319,49 @@ const updateUI = function (account) {
 };
 
 //We want to store current account object in this global variable, because we will need this information in some other functions.
-let currentAccount;
+
+//We need here timer as a global variable.
+let currentAccount, timer;
 
 //FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
+
+//LOGOUT TIMER-2min
+const startLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+
+    const sec = String(time % 60).padStart(2, 0);
+
+    //In each call print the remaining time to UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    //When 0 seconds, stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+
+      //message and logout
+      labelWelcome.textContent = 'Login to get started';
+      containerApp.style.opacity = 0;
+    }
+
+    //Decrese 1s
+    time--;
+  };
+
+  //Set time to 2 minutes
+  let time = 120;
+
+  tick();
+
+  //Call the timer every second
+  const timer = setInterval(tick, 1000);
+
+  return timer;
+};
 
 //LOGIN FEATURE
 btnLogin.addEventListener('click', function (e) {
@@ -391,6 +428,16 @@ btnLogin.addEventListener('click', function (e) {
     //REMOVE FOCUS FROM PIN INPUT FIELD
     inputLoginPin.blur();
 
+    //We want when other user log in to have a new timer which starting countdown from 2 minutes.
+    //We need here global variable timer.
+    if (timer) clearInterval(timer);
+
+    //This function will return us a value for timer.
+    timer = startLogOutTimer();
+
+    // Update UI
+    updateUI(currentAccount);
+
     //UPDATE UI (MOVEMENTS, BALANCE I SUMMERY-IN, OUT,   INTEREST)
     //We are going to create a function which calling all 3 methods for updating UI.
     updateUI(currentAccount);
@@ -446,6 +493,11 @@ btnTransfer.addEventListener('click', function (e) {
     //UPDATE UI (MOVEMENTS, BALANCE I SUMMERY-IN, OUT,   INTEREST)
     //We are going to create a function which calling all 3 methods for updating UI.
     updateUI(currentAccount);
+
+    //RESET TIMER, because we want to have a new timer (2 minutes) every time when user do something (transfer, loan).
+    clearInterval(timer);
+
+    timer = startLogOutTimer();
   }
 
   //inputTransferTo.value = inputTransferAmount.value = '';
@@ -473,8 +525,14 @@ btnLoan.addEventListener('click', function (e) {
 
       //UPDATE UI
       updateUI(currentAccount);
+
+      //RESET TIMER, because we want to have a new timer (2 minutes) every time when user do something (transfer, loan).
+      clearInterval(timer);
+
+      timer = startLogOutTimer();
     }, 2500);
   }
+
   //Clean input field for loan.
   inputLoanAmount.value = '';
 });
@@ -507,6 +565,9 @@ btnClose.addEventListener('click', function (e) {
 
   //We want to clear username and pin input fields.
   inputCloseUsername.value = inputClosePin.value = '';
+
+  //We want to show initial message
+  labelWelcome.textContent = 'Login to get started';
 });
 
 //This is a state variable which monitoring state of sorted array.When we start our application we want to see our original movements array and because of that sorted variable have false value.
@@ -517,7 +578,7 @@ btnSort.addEventListener('click', function (e) {
   e.preventDefault();
 
   //We are going to use NOT operator, because we want to have opposite value of sorted variable.
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
 
   //Now we want to reassign that value.If it was be false to true and opposite.
   sorted = !sorted;
