@@ -9,15 +9,15 @@ In this flowchart we can see all the phases we had to go through when we made th
 # Login page:
 
 The user can log in to the application using the following username and PIN.
-1. username:bm PIN:1111
+1. username:bm PIN:1111,
 
-2. username:mm PIN:2222
+2. username:mm PIN:2222,
 
-3. username:em PIN:3333
+3. username:em PIN:3333,
 
-4. username:bg PIN:4444
+4. username:bg PIN:4444,
 
-5. username:jb PIN:5555
+5. username:jb PIN:5555.
 
 # About application:
 
