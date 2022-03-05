@@ -46,11 +46,11 @@ But if we are active in our application, for example we transfer money or reques
 
 # Main features:
 
-1.Transfer money
+1.Transfer money,
 
-2.Request loan
+2.Request loan,
 
-3.Close account
+3.Close account.
 
 # 1. Transfer money:
 
