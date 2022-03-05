@@ -52,4 +52,15 @@ But if we are active in our application, for example we transfer money or reques
 
 3.Close account
 
+# 1. Transfer money:
+
+![2](https://user-images.githubusercontent.com/61464267/156890761-9b8e939c-bd03-4914-b6cf-dabf58568461.gif)
+
+In the input field “Transfer to”, we enter the username of the user to whom we send the money.
+
+In the input field “Amount”, we enter the amount of money which we want to send.
+
+After that, on the left side where we have an overview of all movements, we can see our new "WITHDEAWAL" movement.
+
+We can now log in to another profile to see if a certain amount has been deposited on that account.When we log in into that account, we can see on the left side our new “DEPOSIT” movement.
 
