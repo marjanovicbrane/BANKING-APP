@@ -64,3 +64,14 @@ After that, on the left side where we have an overview of all movements, we can 
 
 We can now log in to another profile to see if a certain amount has been deposited on that account.When we log in into that account, we can see on the left side our new “DEPOSIT” movement.
 
+# 2. Request loan:
+
+![3](https://user-images.githubusercontent.com/61464267/156890895-46730548-1032-41b9-9fa9-268d591b2124.gif)
+
+You can request a loan based on the largest deposit you have. In this case the largest deposit is 1.000.000 € and that is 10% of the total amount we can request.In this case we can maximum request 10.000.000 € , we can’t request  10.000.001 €.
+
+We may also notice that we have to wait 5 seconds for the loan to be approved, on this way, we simulate the time we have to wait in the real world for a loan to be approved by a bank.
+
+On the left side where we have an overview of all movements, we can see our new "DEPOSIT" movement.
+
+
