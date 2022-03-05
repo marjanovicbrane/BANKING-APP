@@ -74,4 +74,14 @@ We may also notice that we have to wait 5 seconds for the loan to be approved, o
 
 On the left side where we have an overview of all movements, we can see our new "DEPOSIT" movement.
 
+# 3. Close account:
+
+![4](https://user-images.githubusercontent.com/61464267/156891004-eb69558c-c04d-4552-b9b3-17fe360376da.gif)
+
+You can also close your account.To do that, in the input field “Confirm user” you need to enter your username and also in the input field “Confirm PIN” you need to enter your PIN.
+
+Now  when you try to log in again with your username and PIN, you will not be able.
+
+
+
 
