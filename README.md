@@ -1,6 +1,6 @@
 # BANKING APPLICATION
 
-# App FLOWCHART:
+# App flowchart:
 
 In this flowchart we can see all the phases we had to go through when we made this application.
 
